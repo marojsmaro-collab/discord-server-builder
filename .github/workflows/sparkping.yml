@@ -35,9 +35,22 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Build APK
+      - name: Extract and fix project
         run: |
           unzip -o idea-nudge-android-project.zip
+          cd idea-nudge
+          cat >> app/build.gradle.kts <<'EOF'
+
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+          }
+          EOF
+
+      - name: Build APK
+        run: |
           cd idea-nudge
           gradle assembleDebug
 
